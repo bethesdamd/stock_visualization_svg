@@ -11,7 +11,6 @@ document.addEventListener('readystatechange', event => {
 
     var cwidth = 1200;
     var cheight = 600;
-    // var draw = SVG('drawing').size(cwidth,cheight)
     var draw = SVG().addTo('body').size(cwidth,cheight)
     var block_width = 80;
     var block_height = 100;
@@ -77,8 +76,8 @@ document.addEventListener('readystatechange', event => {
       }
     }
 
-    function anim(obj) {
-      obj.animate(1000, 0, 'now').attr({ opacity: .1 })
+    function animate(obj) {
+      // obj.animate(1000, 0, 'now').attr({ opacity: .5 })
     }
 
     function addInfo(){
@@ -86,6 +85,10 @@ document.addEventListener('readystatechange', event => {
       	data[i] = {}
       	data[i]['symbol'] = "IBM";
       }
+    }
+
+    function drawBackground() {
+      draw.rect(cwidth, cheight).fill('#007')
     }
 
     function obsize(obj) {
@@ -118,9 +121,8 @@ document.addEventListener('readystatechange', event => {
     function changeColors() {
       var repeater = setInterval(function () {
         if (callCount < num_blocks) {
-          anim(rect[callCount]);
+          animate(rect[callCount]);
           changeFillColor(callCount, "#900");
-
           callCount += 1;
         } else {
           clearInterval(repeater);
@@ -138,6 +140,7 @@ document.addEventListener('readystatechange', event => {
     sortStocks();
     console.log(stocks);
     calculate_coords();
+    drawBackground();
     drawRects();
     addInfo();
     drawText();
