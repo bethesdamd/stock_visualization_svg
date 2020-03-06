@@ -23,10 +23,35 @@ document.addEventListener('readystatechange', event => {
     c = []
     var num_blocks = 44;
 
-    var securities = ['MMM', 'ADBE', 'ALGN', 'GOOG', 'AON', 'CVX', 'CME', 'EBAY', 'F', 'GILD', 'INFO', 'KR', 'LOW', 'MMC', 'MGM', 'NLSN', 'ORCL', 'PNW', 'PVH', 'TGT', 'V', 'WMT', 'XL', 'YUM']
+    var securities = ['MMM', 'ADBE', 'ALGN', 'GOOG', 'AON', 'CVX', 'CME', 'EBAY', 'F', 'GILD', 'INFO', 'KR', 'LOW', 'MMC', 'MGM', 'NLSN', 'ORCL', 'PNW', 'PVH', 'TGT', 'V', 'WMT', 'XL', 'YUM', 'VTR',	'VRSN',	'VRSK',	'VZ',	'VRTX',	'VIAB',		'VNO',	'VMC',	'WMT',	'WBA',	'WM',	'WAT',	'WEC',	'WFC',	'WELL',	'WDC',	'WU',	'WRK',	'WY',	'WHR',	'WMB',	'WLTW']
 
     coords = []
     data = []
+    var stocks = []  // Array of javascript objects e.g. {symbol: "MMM", price: 0, change: 0}
+
+    function createStocks() {
+      for (symbol of securities) {
+        stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random())})
+      }
+    }
+
+    function fl(i) {
+      return Math.floor(i * 100.0) / 100.0;
+    }
+
+    function findBySymbol(symbol) {
+      for (s in stocks) {
+        if (s.symbol == symbol) {
+          return s;
+        } else {
+          return "error";
+        }
+      }
+    }
+
+    function sortStocks() {
+      stocks = stocks.sort((a, b) => (a.change > b.change) ? 1 : -1)
+    }
 
     function changeFillColor(n, c) {
     	rect[n].fill(c)
@@ -44,6 +69,8 @@ document.addEventListener('readystatechange', event => {
         	x = c * block_width + (c + 1) * block_hpadding;
           y = r * block_height + (r + 1) * block_vpadding;
           coords[total] = {'x': x, 'y': y};
+          stocks[total]['x'] = x;
+          stocks[total]['y'] = y
       		total = total + 1;
         if (total == num_blocks) { abort = true;}
         }
@@ -51,8 +78,7 @@ document.addEventListener('readystatechange', event => {
     }
 
     function anim(obj) {
-    	   obj.animate(500, '<>').during(function(pos, morph, eased){
-         obj.opacity(eased);});
+      obj.animate(1000, 0, 'now').attr({ opacity: .1 })
     }
 
     function addInfo(){
@@ -62,12 +88,28 @@ document.addEventListener('readystatechange', event => {
       }
     }
 
+    function obsize(obj) {
+      return Object.keys(obj).length;
+    }
+
     function drawText() {
     	for (i=0; i < num_blocks; i++) {
-      	 t = draw.text(securities[i]).fill("#FFF").size(fontSize1.toString() + "px");
+        // Symbol text
+        s = stocks[i]
+         t = draw.text(s['symbol']).fill("#FFF").size(fontSize1.toString() + "px");
          offsetx = block_width/2 - fontSize1;
-         t.move(coords[i]['x'] + offsetx, coords[i]['y'] + block_height/10);
+         t.move(s['x'] + offsetx, s['y'] + block_height/10);
          t.font('family', 'Monospace');
+         // Price text
+         p = draw.text(s['price'].toString()).fill("#FFF").size(fontSize1.toString() + "px");
+         p.move(s['x'] + offsetx, s['y'] + block_height/3);
+         p.font('family', 'Monospace');
+
+         // Change text
+         c = draw.text(s['change'].toString()).fill("#FFF").size(fontSize1.toString() + "px");
+         c.move(s['x'] + offsetx, s['y'] + block_height/1.5);
+         c.font('family', 'Monospace');
+
       }
     }
 
@@ -76,22 +118,28 @@ document.addEventListener('readystatechange', event => {
     function changeColors() {
       var repeater = setInterval(function () {
         if (callCount < num_blocks) {
-          changeFillColor(callCount, "#900");
           anim(rect[callCount]);
+          changeFillColor(callCount, "#900");
+
           callCount += 1;
         } else {
           clearInterval(repeater);
         }
-      }, 40);
+      }, 20);
     }
 
+    function drawRects() {
+      for (i= 0; i< num_blocks; i++) {
+      	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill("#090");
+      }
+    }
+
+    createStocks();
+    sortStocks();
+    console.log(stocks);
     calculate_coords();
+    drawRects();
     addInfo();
-
-    for (i= 0; i< num_blocks; i++) {
-    	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill("#090");
-    }
-
     drawText();
     changeColors();
 
@@ -99,12 +147,10 @@ document.addEventListener('readystatechange', event => {
 
 </script>
 
-
 </head>
 <body>
-
+<h3>Stock Market Visualization</h3>
 <div id="drawing"></div>
-
 
 </body>
 </html>
