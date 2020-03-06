@@ -76,13 +76,13 @@ document.addEventListener('readystatechange', event => {
     function changeColors() {
       var repeater = setInterval(function () {
         if (callCount < num_blocks) {
-          changeFillColor(callCount, "#688");
+          changeFillColor(callCount, "#900");
           anim(rect[callCount]);
           callCount += 1;
         } else {
           clearInterval(repeater);
         }
-      }, 30);
+      }, 60);
     }
 
     calculate_coords();
