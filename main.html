@@ -76,7 +76,7 @@ document.addEventListener('readystatechange', event => {
     function changeColors() {
       var repeater = setInterval(function () {
         if (callCount < num_blocks) {
-          changeFillColor(callCount, "#900");
+          changeFillColor(callCount, "#600");
           anim(rect[callCount]);
           callCount += 1;
         } else {
