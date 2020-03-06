@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SVG</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js"></script>
+
+<script>
+
+document.addEventListener('readystatechange', event => {
+  if (event.target.readyState === "complete") {
+
+    var cwidth = 600;
+    var cheight = 600;
+    // var draw = SVG('drawing').size(cwidth,cheight)
+    var draw = SVG().addTo('body').size(cwidth,cheight)
+    var block_width = 80;
+    var block_height = 100;
+    var block_hpadding = 7;
+    var block_vpadding = 7;
+    var fontSize1 = 20;
+
+    rect = []
+    c = []
+    var num_blocks = 24;
+
+    var securities = ['MMM', 'ADBE', 'ALGN', 'GOOG', 'AON', 'CVX', 'CME', 'EBAY', 'F', 'GILD', 'INFO', 'KR', 'LOW', 'MMC', 'MGM', 'NLSN', 'ORCL', 'PNW', 'PVH', 'TGT', 'V', 'WMT', 'XL', 'YUM']
+
+    coords = []
+    data = []
+
+    function changeFillColor(n, c) {
+    	rect[n].fill(c)
+    }
+
+    function calculate_coords() {
+    	num_columns = Math.floor(cwidth / (block_width + block_hpadding));
+      num_rows = Math.floor(num_blocks / num_columns);
+      num_remaining = num_blocks % num_columns;
+      total = 0;
+      abort = false;
+
+      for (r=0; r < num_rows + 1 && !abort; r++) {
+      	for (c=0; c< num_columns && !abort; c++) {
+        	x = c * block_width + (c + 1) * block_hpadding;
+          y = r * block_height + (r + 1) * block_vpadding;
+          coords[total] = {'x': x, 'y': y};
+      		total = total + 1;
+        if (total == num_blocks) { abort = true;}
+        }
+      }
+    }
+
+    function anim(obj) {
+    	   obj.animate(500, '<>').during(function(pos, morph, eased){
+         obj.opacity(eased);});
+    }
+
+    function addInfo(){
+    	for (i=0; i < num_blocks; i++) {
+      	data[i] = {}
+      	data[i]['symbol'] = "IBM";
+      }
+    }
+
+    function drawText() {
+    	for (i=0; i < num_blocks; i++) {
+      	 t = draw.text(securities[i]).fill("#FFF").size(fontSize1.toString() + "px");
+         offsetx = block_width/2 - fontSize1;
+         t.move(coords[i]['x'] + offsetx, coords[i]['y'] + block_height/10);
+         t.font('family', 'Monospace');
+      }
+    }
+
+    var callCount = 0;
+
+    function changeColors() {
+      var repeater = setInterval(function () {
+        if (callCount < num_blocks) {
+          changeFillColor(callCount, "#900");
+          anim(rect[callCount]);
+          callCount += 1;
+        } else {
+          clearInterval(repeater);
+        }
+      }, 30);
+    }
+
+    calculate_coords();
+    addInfo();
+
+    for (i= 0; i< num_blocks; i++) {
+    	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill("#090");
+    }
+
+    drawText();
+    changeColors();
+
+}})
+
+</script>
+
+
+</head>
+<body>
+
+<div id="drawing"></div>
+
+
+</body>
+</html>
