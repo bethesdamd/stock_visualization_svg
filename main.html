@@ -10,7 +10,7 @@ document.addEventListener('readystatechange', event => {
   if (event.target.readyState === "complete") {
 
     var cwidth = 1200;
-    var cheight = 600;
+    var cheight = 500;
     var draw = SVG().addTo('body').size(cwidth,cheight)
     var block_width = 80;
     var block_height = 100;
@@ -30,7 +30,7 @@ document.addEventListener('readystatechange', event => {
 
     function createStocks() {
       for (symbol of securities) {
-        stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random())})
+        stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random() - 0.5)})
       }
     }
 
@@ -132,7 +132,10 @@ document.addEventListener('readystatechange', event => {
 
     function drawRects() {
       for (i= 0; i< num_blocks; i++) {
-      	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill("#090");
+        stock = stocks[i];
+        color = (stock['change'] < 0 ? '#900' : '#090');
+        console.log(color);
+      	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(color);
       }
     }
 
@@ -144,7 +147,7 @@ document.addEventListener('readystatechange', event => {
     drawRects();
     addInfo();
     drawText();
-    changeColors();
+    // changeColors();
 
 }})
 
