@@ -9,7 +9,7 @@
 document.addEventListener('readystatechange', event => {
   if (event.target.readyState === "complete") {
 
-    var cwidth = 600;
+    var cwidth = 1200;
     var cheight = 600;
     // var draw = SVG('drawing').size(cwidth,cheight)
     var draw = SVG().addTo('body').size(cwidth,cheight)
@@ -21,7 +21,7 @@ document.addEventListener('readystatechange', event => {
 
     rect = []
     c = []
-    var num_blocks = 24;
+    var num_blocks = 44;
 
     var securities = ['MMM', 'ADBE', 'ALGN', 'GOOG', 'AON', 'CVX', 'CME', 'EBAY', 'F', 'GILD', 'INFO', 'KR', 'LOW', 'MMC', 'MGM', 'NLSN', 'ORCL', 'PNW', 'PVH', 'TGT', 'V', 'WMT', 'XL', 'YUM']
 
@@ -82,7 +82,7 @@ document.addEventListener('readystatechange', event => {
         } else {
           clearInterval(repeater);
         }
-      }, 60);
+      }, 40);
     }
 
     calculate_coords();
