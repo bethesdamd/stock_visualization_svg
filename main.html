@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Oxygen+Mono&display=swap" rel="stylesheet">
   <title>SVG</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js"></script>
+  <style>
+  h2 {
+    font-family: 'Roboto';
+    font-size: 30px;
+  }
+  body {
+    font-family: 'Oxygen Mono', monospace;
+    font-size: 14px;
+  }
+</style>
 
 <script>
 
@@ -28,6 +40,11 @@ document.addEventListener('readystatechange', event => {
     data = []
     var stocks = []  // Array of javascript objects e.g. {symbol: "MMM", price: 0, change: 0}
 
+    var linear = draw.gradient('linear', function(add) {
+      add.stop(0, '#070')
+      add.stop(1, '#040')
+    }).transform( {rotate:45 })
+
     function createStocks() {
       for (symbol of securities) {
         stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random() - 0.5)})
@@ -49,7 +66,7 @@ document.addEventListener('readystatechange', event => {
     }
 
     function sortStocks() {
-      stocks = stocks.sort((a, b) => (a.change > b.change) ? 1 : -1)
+      stocks = stocks.sort((a, b) => (a.change < b.change) ? 1 : -1)
     }
 
     function changeFillColor(n, c) {
@@ -88,7 +105,7 @@ document.addEventListener('readystatechange', event => {
     }
 
     function drawBackground() {
-      draw.rect(cwidth, cheight).fill('#007')
+      draw.rect(cwidth, cheight).fill('#004')
     }
 
     function obsize(obj) {
@@ -103,6 +120,7 @@ document.addEventListener('readystatechange', event => {
          offsetx = block_width/2 - fontSize1;
          t.move(s['x'] + offsetx, s['y'] + block_height/10);
          t.font('family', 'Monospace');
+
          // Price text
          p = draw.text(s['price'].toString()).fill("#FFF").size(fontSize1.toString() + "px");
          p.move(s['x'] + offsetx, s['y'] + block_height/3);
@@ -135,7 +153,8 @@ document.addEventListener('readystatechange', event => {
         stock = stocks[i];
         color = (stock['change'] < 0 ? '#900' : '#090');
         console.log(color);
-      	rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(color);
+      	// rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(color);
+        rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(linear);
       }
     }
 
@@ -155,7 +174,7 @@ document.addEventListener('readystatechange', event => {
 
 </head>
 <body>
-<h3>Stock Market Visualization</h3>
+<h2>Stock Market Visualization</h2>
 <div id="drawing"></div>
 
 </body>
