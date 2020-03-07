@@ -40,14 +40,20 @@ document.addEventListener('readystatechange', event => {
     data = []
     var stocks = []  // Array of javascript objects e.g. {symbol: "MMM", price: 0, change: 0}
 
-    var linear = draw.gradient('linear', function(add) {
-      add.stop(0, '#070')
+    var green_gradient = draw.gradient('linear', function(add) {
+      add.stop(0, '#060')
       add.stop(1, '#040')
     }).transform( {rotate:45 })
 
+    var red_gradient = draw.gradient('linear', function(add) {
+      add.stop(0, '#700')
+      add.stop(1, '#500')
+    }).transform( {rotate:45 })
+
+
     function createStocks() {
       for (symbol of securities) {
-        stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random() - 0.5)})
+        stocks.push({symbol: symbol, price: fl(100.0 * Math.random()), change: fl(3 * Math.random() - 1.0)})
       }
     }
 
@@ -93,8 +99,9 @@ document.addEventListener('readystatechange', event => {
       }
     }
 
-    function animate(obj) {
-      // obj.animate(1000, 0, 'now').attr({ opacity: .5 })
+    function animate(obj, opacity, delay) {
+      obj.animate(500, delay, 'now').attr({ opacity: opacity }).animate(500, 0, 'now').attr({ opacity: 0.5 });
+      // obj.animate(500, 600, 'now').attr({ opacity: 0.0 })
     }
 
     function addInfo(){
@@ -136,11 +143,12 @@ document.addEventListener('readystatechange', event => {
 
     var callCount = 0;
 
-    function changeColors() {
+    function changeColors(opacity, delay) {
       var repeater = setInterval(function () {
         if (callCount < num_blocks) {
-          animate(rect[callCount]);
-          changeFillColor(callCount, "#900");
+          animate(rect[callCount], opacity, delay);
+          // animate(rect[callCount], 1.0);
+          // changeFillColor(callCount, "#fff");
           callCount += 1;
         } else {
           clearInterval(repeater);
@@ -151,10 +159,8 @@ document.addEventListener('readystatechange', event => {
     function drawRects() {
       for (i= 0; i< num_blocks; i++) {
         stock = stocks[i];
-        color = (stock['change'] < 0 ? '#900' : '#090');
-        console.log(color);
-      	// rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(color);
-        rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(linear);
+        color = (stock['change'] < 0 ? red_gradient : green_gradient);
+        rect[i] = draw.rect(block_width, block_height).move(coords[i]['x'], coords[i]['y']).fill(color);
       }
     }
 
@@ -166,7 +172,10 @@ document.addEventListener('readystatechange', event => {
     drawRects();
     addInfo();
     drawText();
-    // changeColors();
+    changeColors(1.0, 200);
+
+
+    // draw.svg('<g><path d="M0 0h24v24H0z" fill="none"/><path fill="#fff" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" transform="rotate(10,0,0)"/></g>')
 
 }})
 
