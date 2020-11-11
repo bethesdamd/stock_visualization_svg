@@ -5,4 +5,8 @@ This project demonstrates how to use SVG to create a stock market dashboard, ins
 
 This is high performance and the animations run locally.
 
-Download the html file and open it locally in a browser.
+Download the html file and open it locally in a browser.  Or see this jsfiddle:
+
+https://jsfiddle.net/drs44/6ph3wuf7/3/
+
+
